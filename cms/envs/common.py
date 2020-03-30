@@ -1897,6 +1897,12 @@ derived('HELP_TOKENS_LANGUAGE_CODE', 'HELP_TOKENS_VERSION')
 RETRY_ACTIVATION_EMAIL_MAX_ATTEMPTS = 5
 RETRY_ACTIVATION_EMAIL_TIMEOUT = 0.5
 
+# Software Secure request retry settings
+# Time in seconds before a retry of the task should be 60 mints.
+SOFTWARE_SECURE_REQUEST_RETRY_DELAY = 60 * 60
+# Maximum of 6 retries before giving up.
+SOFTWARE_SECURE_RETRY_MAX_ATTEMPTS = 6
+
 ############## DJANGO-USER-TASKS ##############
 
 # How long until database records about the outcome of a task and its artifacts get deleted?

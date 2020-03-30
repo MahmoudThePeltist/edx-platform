@@ -727,7 +727,7 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
         # settings.VERIFY_STUDENT values that aren't set in dev. So we just
         # pretend like we successfully posted.
 
-        if auto_verify_for_testing_enabled(False):
+        if auto_verify_for_testing_enabled():
             fake_response = requests.Response()
             fake_response.status_code = 200
             return fake_response
