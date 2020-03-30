@@ -218,19 +218,20 @@ class TestPhotoVerification(TestVerification, MockS3BotoMixin, ModuleStoreTestCa
         self.assertEqual(attempt.status, "submitted")
 
         # We post, but Software Secure doesn't like what we send for some reason
-        with patch('lms.djangoapps.verify_student.models.requests.post', new=mock_software_secure_post_error):
+        with patch('lms.djangoapps.verify_student.tasks.requests.post', new=mock_software_secure_post_error):
             attempt = self.create_and_submit()
             self.assertEqual(attempt.status, "must_retry")
 
         # We try to post, but run into an error (in this case a network connection error)
-        with patch('lms.djangoapps.verify_student.models.requests.post', new=mock_software_secure_post_unavailable):
-            with LogCapture('lms.djangoapps.verify_student.models') as logger:
+        with patch('lms.djangoapps.verify_student.tasks.requests.post', new=mock_software_secure_post_unavailable):
+            with LogCapture('lms.djangoapps.verify_student.tasks') as logger:
                 attempt = self.create_and_submit()
                 self.assertEqual(attempt.status, "must_retry")
                 logger.check(
-                    ('lms.djangoapps.verify_student.models', 'ERROR',
-                     u'Software Secure submission failed for user %s, setting status to must_retry'
-                     % attempt.user.username))
+                    ('lms.djangoapps.verify_student.tasks', 'ERROR',
+                     'Software Secure submission failed for user %s, setting status to must_retry'
+                     % attempt.user.username)
+                )
 
     @mock.patch.dict(settings.FEATURES, {'AUTOMATIC_VERIFY_STUDENT_IDENTITY_FOR_TESTING': True})
     def test_submission_while_testing_flag_is_true(self):
